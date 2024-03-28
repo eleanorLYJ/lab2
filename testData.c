@@ -4,18 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-/*
-0: Random data
-1: Ascending data
-2: Descending data
-3: Ascending order, then randomly swap 3 times
-4: Ascending order, then random swap 10 times
-5: Ascending, then randomly replace 0.2% of elements w/random value
-6: All are equal
-
-
-!sort: 最壞情況
-*/
 
 static void swap(int *a, int *b) {
   int temp = *a;
@@ -88,12 +76,15 @@ void create_sample(struct list_head *head, element_t *space, int samples,
   } else if (type == 4) {
     generate_random_data(arr, samples);
     qsort(arr, samples, sizeof(int), (int (*)(const void *, const void *))asc);
-    shuffle_times(arr, samples, 7);
+    shuffle_times(arr, samples, 10);
   } else if (type == 5) {
     generate_random_data(arr, samples);
     create_runs(arr, samples, run_size);
-    shuffle_within_runs(arr, samples, run_size, shuffle_prob);
   } else if (type == 6) {
+    generate_random_data(arr, samples);
+    create_runs(arr, samples, run_size);
+    shuffle_within_runs(arr, samples, run_size, shuffle_prob);
+  }  else if (type == 7) {
     int r = rand();
     for (int i = 0; i < samples; i++)
       arr[i] = r;

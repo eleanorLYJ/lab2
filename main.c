@@ -90,7 +90,7 @@ int main(void) {
   samples = malloc(sizeof(*samples) * SAMPLES);
   warmdata = malloc(sizeof(*warmdata) * SAMPLES);
   testdata = malloc(sizeof(*testdata) * SAMPLES);
-
+  printf("smaple %d\n", SAMPLES);
   while (test->fp != NULL) {
     printf("==== Testing %s ====\n", test->name);
     INIT_LIST_HEAD(&warmdata_head);
@@ -100,7 +100,7 @@ int main(void) {
     test->fp(&count, &warmdata_head, compare);
     /* Test */
 
-    for (int type = 0; type <= 5; type++) {
+    for (int type = 0; type <= 7; type++) {
       printf("type == %d\n", type);
       create_sample(&sample_head, samples, nums, type);
       copy_list(&sample_head, &testdata_head, testdata);
