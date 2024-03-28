@@ -1,19 +1,13 @@
 #include "list.h"
 #include "testData.h"
-#include "timsort.h"
+#include "sort.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-// typedef struct element {
-// 	struct list_head list;
-// 	int val;
-// 	int seq;
-// } element_t;
-
-#define SAMPLES ((1 << 15) + 20) // 15
+#define SAMPLES ((1 << 15) + 20)
 
 static void copy_list(struct list_head *from, struct list_head *to,
                       element_t *space) {
@@ -87,6 +81,7 @@ int main(void) {
   srand(1050);
   test_t tests[] = {{timsort, "timsort"},
                     {list_sort, "list_sort"},
+                    {rmergesort, "recursive merge_sort"},
                     {NULL, NULL}},
          *test = tests;
 

@@ -1,7 +1,9 @@
-#include "timsort.h"
+#include "sort.h"
 #include "list.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
+
 
 static inline size_t run_size(struct list_head *head) {
   if (!head)
@@ -256,4 +258,69 @@ void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp) {
 
   /* The final merge, rebuilding prev links */
   merge_final(priv, cmp, head, pending, list);
+}
+
+static struct list_head *mergeTwoLists(void *priv, struct list_head *L1,
+                                       struct list_head *L2,
+                                       list_cmp_func_t cmp) {
+  if (!L1 || !L2)
+    return L1;
+
+  struct list_head *Lnode = L1->next, *Rnode = L2->next;
+
+  while (Lnode != L1 && Rnode != L2) {
+    if (cmp(priv, L1, L2) <= 0) {
+      struct list_head *tmp = Rnode->next;
+      list_move_tail(Rnode, Lnode);
+      Rnode = tmp;
+    } else {
+      Lnode = Lnode->next;
+    }
+  }
+
+  if (!L2) {
+    list_splice_tail(L2, L1);
+  }
+  return L1;
+}
+// struct list_head *mergesort_list(struct list_head *head, bool descend)
+static struct list_head *mergesort_list(void *priv, struct list_head *head,
+                                        list_cmp_func_t cmp) {
+  if (!head || list_empty(head) || list_is_singular(head)) {
+    return head;
+  }
+
+  struct list_head *fast = head->next, *slow = head->next;
+  do {
+    fast = fast->next->next;
+    slow = slow->next;
+  } while (fast != head && fast->next != head);
+
+  struct list_head *mid = slow;
+
+  element_t ele;
+  struct list_head *head2 = &(ele.list);
+  INIT_LIST_HEAD(head2);
+  struct list_head *prevhead = head->prev;
+  struct list_head *prevmid = mid->prev;
+
+  head2->prev = prevhead;
+  prevhead->next = head2;
+  head2->next = mid;
+  mid->prev = head2;
+
+  prevmid->next = head;
+  head->prev = prevmid;
+
+  struct list_head *left = mergesort_list(priv, head, cmp),
+                   *right = mergesort_list(priv, head2, cmp);
+  mergeTwoLists(priv, left, right, cmp);
+  return left;
+}
+
+/* Sort elements of queue in ascending/descending order */
+void rmergesort(void *priv, struct list_head *head, list_cmp_func_t cmp) {
+  if (!head || list_empty(head))
+    return;
+  mergesort_list(priv, head, cmp);
 }
