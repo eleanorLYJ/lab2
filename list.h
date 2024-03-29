@@ -398,9 +398,9 @@ static inline void list_move_tail(struct list_head *node,
 #endif
 
 typedef struct element {
-	struct list_head list;
-	int val;
-	int seq;
+    struct list_head list;
+    int val;
+    int seq;
 } element_t;
 
 
