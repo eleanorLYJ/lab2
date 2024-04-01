@@ -1,7 +1,7 @@
 # Makefile for compiling main.c, sort.c, and testData.c
 
 CC := gcc
-CFLAGS = -O1 -g -Wall
+CFLAGS = -O1 -g -Wall -fsanitize=undefined
 
 SRCS := main.c sort.c testData.c
 

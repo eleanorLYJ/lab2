@@ -102,13 +102,13 @@ int main(void)
     while (test->fp != NULL) {
         printf("==== Testing %s ====\n", test->name);
         INIT_LIST_HEAD(&warmdata_head);
-        INIT_LIST_HEAD(&testdata_head);
         /* Warm up */
         copy_list(&sample_head, &warmdata_head, warmdata);
         test->fp(&count, &warmdata_head, compare);
         /* Test */
 
         for (int type = 0; type <= 7; type++) {
+            INIT_LIST_HEAD(&testdata_head);
             printf("type == %d\n", type);
             create_sample(&sample_head, samples, nums, type);
             copy_list(&sample_head, &testdata_head, testdata);
